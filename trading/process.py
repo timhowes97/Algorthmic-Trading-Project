@@ -34,7 +34,7 @@ def log_transaction(transaction_type, date, stock, number_of_shares, price, fees
         amount_spent = - (number_of_shares * price) - fees
         
         # first open the ledger_file, if it does not exist we create a new empty file
-        # use 'a' as second argument as we wish to append to the file (create and append if it doesn't exist)
+        # use 'a' as second argument as we wish to append to the file (creates and append if it doesn't exist)
         file = open(ledger_file, 'a')
     
         # now append the contents to the file
@@ -45,6 +45,7 @@ def log_transaction(transaction_type, date, stock, number_of_shares, price, fees
         
     # log transaction if we sell
     elif transaction_type == 'sell':
+        
         # if we have 0 stocks to sell we do nothing
         if number_of_shares > 0:
             
@@ -96,6 +97,7 @@ def buy(date, stock, available_capital, stock_prices, fees, portfolio, ledger_fi
         # log in the ledger
         log_transaction('buy', date, stock, available_stock_to_buy, stock_prices[date, stock], fees, ledger_file)
     
+    # if price is NaN, set set our shares for this stock to 0 
     else:
         portfolio[stock] = 0
         
@@ -120,12 +122,14 @@ def sell(date, stock, stock_prices, fees, portfolio, ledger_file):
     '''
     # if stock price is NaN we have no stock to sell
     if np.isnan(stock_prices[date, stock]) == False:
+        
         # first we log the transaction in the ledger
         log_transaction('sell', date, stock, portfolio[stock], stock_prices[date, stock], fees, ledger_file)
 
         # now we change the portfolio according to what stock we want to sell, selling all of this stock
         portfolio[stock] = 0
     
+    # if price is NaN, set number of shares of this stock to 0
     else: 
         portfolio[stock] = 0
     
@@ -154,7 +158,6 @@ def create_portfolio(available_amounts, stock_prices, fees, ledger_file):
     
     # how many stocks in our portfolio
     N = stock_prices.shape[1]
-    stocks = range(N)
     
     # we create this portfolio on day 0
     start_date = 0
@@ -163,7 +166,7 @@ def create_portfolio(available_amounts, stock_prices, fees, ledger_file):
     portfolio = np.zeros(N)
     
     # loop through each stock to buy
-    for stock in stocks:
+    for stock in range(N):
         
         # buy stock using the buy function
         buy(start_date, stock, available_amounts[stock], stock_prices, fees, portfolio, ledger_file)
