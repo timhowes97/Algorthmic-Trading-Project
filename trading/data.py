@@ -12,7 +12,11 @@ def news(probability, volatility):
         
     Output: 
         drift_matrix (ndarray): values of news event shocks to be added to the stock prices
-        
+     
+     Example:
+         Get the effect on a stocks with volatilitits 2 and 4 of news event that occurs on a given day with probability 0.01.
+         Returns an array with 2 columns.
+         >>> news([2, 4], 0.01)
     '''
     
     
@@ -63,6 +67,11 @@ def generate_stock_price(days, initial_prices, volatility, news_probability = 0.
         
     Output:
         share_price_matrix (ndarray): simulated stock price data
+        
+    Example:
+        Generate data for a stock with initial price 300 and volatility 3 over a one year period.
+        Returns an array with one column.
+        >>> generate_stock_price(365, 300, 3)
     '''
     
     # change intial_price and volatility to numpy array

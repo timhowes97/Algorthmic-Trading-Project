@@ -17,6 +17,11 @@ def random(stock_prices, period = 7, amount = 5000, fees = 20, ledger = 'random_
         ledger (str, default 'ledger_random.txt'): path to the ledger file
 
     Output: None
+    
+    Example:
+        Perform random strategy with period 8-days on a given portfolio of stock.
+        Returns None
+        >>> random(stock_price_data, 8)
     '''    
     # get number of stocks and number of days
     number_of_days, N = stock_prices.shape
@@ -76,6 +81,11 @@ def crossing_averages(stock_prices, amount = 5000, cool_down_period = 5, n = 200
         ledger (str, default 'crossing_average_ledger.txt'): path to the ledger file
         
     Output: None
+    
+    Example:
+        Perform crossing average strategy with FMA period of 50 days and SMA period of 200 days with no weights and no cool_down period on a given portfolio.
+        Returns None.
+        >>> crossing_average(stock_price_data, cool_period = 0, n = 200, m = 50)
     '''
     # get number of stocks and number of days
     total_days, N = stock_prices.shape
@@ -158,6 +168,11 @@ def momentum(stock_prices, osc_type = 'stochastic', lower = 0.25, upper = 0.75, 
         ledger (str, default 'crossing_average_ledger.txt'): path to the ledger file
         
     Output: None
+    
+    Example:
+        Perform momentum strategy with 7-day RSI with thresholds 0.2 and 0.8, 4-day wait time and no smoothing period on a given portfolio.
+        Returns None
+        >>> momentum(stock_price_data, osc_type = 'RSI', lower = 0.2, upper = 0.8, wait_time = 4)
     '''
     
     # get number of stocks and number of days

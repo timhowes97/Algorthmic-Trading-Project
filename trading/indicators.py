@@ -13,6 +13,10 @@ def moving_average(stock_prices, n = 7, weights = []):
 
     Output:
         ma (ndarray): the n-day (possibly weighted) moving average of the share prices over time.
+        
+    Example:
+        Get the 3-day weighted moving averages of an array of stock price data.
+        >>> moving_average(stock_price_data, n = 3, weights = [0.1, 0.4, 0.5])
     '''
 
     # get number of days and number of stock
@@ -60,6 +64,11 @@ def oscillator(stock_prices, n = 7, osc_type = 'stochastic', smoothing_period = 
 
     Output:
         osc (ndarray): the (possibly smoothed) oscillator level with period $n$ for the stocks over time.
+        
+    Example:
+        Get the 10-day RSI of a stock smoothed with a 21-day moving average.
+        Returns a array of smoothed RSI.
+        >>> oscillator(stock_price_data, n = 10, osc_type = 'RSI', smoothing_period = 21)
     '''
    
     # get number of days and number of stocks

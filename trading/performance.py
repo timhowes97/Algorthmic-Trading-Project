@@ -17,6 +17,11 @@ def read_ledger(ledger_file, profit_plot = True, strategy = 'Random Strategy', s
         
     Output:
         State of initial and final portfolio, information on portfolio and information of chosen stock.
+        
+    Example:
+        Read the ledger from a crossing average strategy and choose to output information on stock 3 with no plot.
+        Returns tables of initial portfolio, final portfolio, trading period information, dates stock 3 was bought and sold and the amount earned from stock 3.
+        >>> read_ledger('crossing_average_ledger.txt', profit_plot = False, strategy = 'Momentum', stock = 3)
     '''
     # first open the file into a readable mode
     file = open(ledger_file, 'r')    
