@@ -88,8 +88,7 @@ def crossing_averages(stock_prices, amount = 5000, cool_down_period = 5, n = 200
     n_day_MA = np.zeros(stock_prices.shape)
     
     # initialize cool down matrix which indicates a cool down period
-    buy_cool_down_matrix = np.zeros(stock_prices.shape)
-    sell_cool_down_matrix = np.zeros(stock_prices.shape)
+    cool_down_matrix = np.zeros(stock_prices.shape)
     
     # get n_day MA
     n_day_MA = ind.moving_average(stock_prices, n, n_weights) 
@@ -101,25 +100,25 @@ def crossing_averages(stock_prices, amount = 5000, cool_down_period = 5, n = 200
     for day in range(n, total_days):
             
         # find stocks that cross from below and check that they are out of cool down period
-        stocks_to_buy = np.where((m_day_MA[day - 1] < n_day_MA[day - 1]) & (m_day_MA[day] > n_day_MA[day]) & (buy_cool_down_matrix[(day - cool_down_period - 1)] != 1))[0]
+        stocks_to_buy = np.where((m_day_MA[day - 1] < n_day_MA[day - 1]) & (m_day_MA[day] > n_day_MA[day]) & (cool_down_matrix[(day - cool_down_period - 1)] != 1))[0]
         # if there are stocks to buy, buy them
         if np.any(stocks_to_buy):
             for stock in stocks_to_buy:
                 proc.buy(day, stock, amount, stock_prices, fees, portfolio, ledger)
 
             # indicate not to buy during cool down period
-            buy_cool_down_matrix[(day - cool_down_period) : day, stocks_to_buy] = 1
+            cool_down_matrix[(day - cool_down_period) : day, stocks_to_buy] = 1
 
         # if it crosses from above, we sell
         # find stocks that cross from above and check that they are out of cool down period
-        stocks_to_sell = np.where((m_day_MA[day - 1] > n_day_MA[day - 1]) & (m_day_MA[day] < n_day_MA[day]) & (sell_cool_down_matrix[(day - cool_down_period - 1)] != 1))[0]
+        stocks_to_sell = np.where((m_day_MA[day - 1] > n_day_MA[day - 1]) & (m_day_MA[day] < n_day_MA[day]) & (cool_down_matrix[(day - cool_down_period - 1)] != 1))[0]
         # if there are stocks to sell, buy them
         if np.any(stocks_to_sell):
             for stock in stocks_to_sell:
                 proc.sell(day, stock, stock_prices, fees, portfolio, ledger)
 
             # indicate not to buy during cool down period
-            sell_cool_down_matrix[(day - cool_down_period) : day, stocks_to_sell] = 1
+            cool_down_matrix[(day - cool_down_period) : day, stocks_to_sell] = 1
     
     # sell portfolio at end
     for stock_number in range(N):
@@ -182,18 +181,18 @@ def momentum(stock_prices, osc_type = 'stochastic', lower = 0.25, upper = 0.75, 
     
     if wait_time > 0:
         # initialize indicator matrix which indicates we can buy after waiting time
-        buy_indicator_matrix = np.zeros(oscillator.shape)
-        sell_indicator_matrix = np.zeros(oscillator.shape)
+        indicator_matrix = np.zeros(oscillator.shape)
+
         # now loop through each day to decide whether to buy or sell and implement the wait time
         for day in range(day_1, total_days):
 
            # check if oscillator is below lower threshold and this is first time we cross threshold
             stocks_to_buy_later = np.where((oscillator[day] < lower) & (oscillator[(day - 1)] >= lower))[0]
             # indicate to buy later
-            buy_indicator_matrix[day, stocks_to_buy_later] = 1
+            indicator_matrix[day, stocks_to_buy_later] = 1
 
             # check indicator matrix, if 1 and stock remained below threshold we buy
-            stocks_to_buy_now = np.where((buy_indicator_matrix[(day - wait_time)] == 1) & (np.all(oscillator[(day - wait_time) : (day + 1)] < lower, axis = 0)))[0]
+            stocks_to_buy_now = np.where((indicator_matrix[(day - wait_time)] == 1) & (np.all(oscillator[(day - wait_time) : (day + 1)] < lower, axis = 0)))[0]
             # if there are stocks to buy, buy them
             if np.any(stocks_to_buy_now):
                 for stock in stocks_to_buy_now:
@@ -202,10 +201,10 @@ def momentum(stock_prices, osc_type = 'stochastic', lower = 0.25, upper = 0.75, 
            # check if oscillator is above upper threshold and this is first time we cross threshold
             stocks_to_sell_later = np.where((oscillator[day] > upper) & (oscillator[(day - 1)] <= upper))[0]
             # indicate to sell later
-            sell_indicator_matrix[day, stocks_to_sell_later] = 1
+            indicator_matrix[day, stocks_to_sell_later] = 1
 
             # check indicator matrix, if 1 and stock remained below threshold we buy
-            stocks_to_sell_now = np.where((sell_indicator_matrix[(day - wait_time)] == 1) & (np.all(oscillator[(day - wait_time) : (day + 1)] > upper, axis = 0)))[0]
+            stocks_to_sell_now = np.where((indicator_matrix[(day - wait_time)] == 1) & (np.all(oscillator[(day - wait_time) : (day + 1)] > upper, axis = 0)))[0]
             # if there are stocks to sell, sell them
             if np.any(stocks_to_sell_now) != 0:
                 for stock in stocks_to_sell_now:
