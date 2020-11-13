@@ -1,5 +1,6 @@
 import numpy as np
 import re
+# import re for splitting list with several delimiters
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -28,6 +29,7 @@ def read_ledger(ledger_file, profit_plot = True, strategy = 'Random Strategy', s
     # now read it into a list
     contents = file.read()
     # get list by separating by commas, \n and white spaces 
+    # idea for below line: https://stackoverflow.com/questions/4998629/split-string-with-multiple-delimiters-in-python
     contents = re.split('[,\n\s]\s*', contents)
     
     # count how many trades were done 
