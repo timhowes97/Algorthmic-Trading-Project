@@ -185,7 +185,7 @@ def momentum(stock_prices, osc_type = 'stochastic', lower = 0.25, upper = 0.75, 
     oscillator = np.zeros(stock_prices.shape)
     
     # get the oscillator for each stock
-    oscillator= ind.oscillator(stock_prices, n, osc_type, smoothing_period)
+    oscillator = ind.oscillator(stock_prices, n, osc_type, smoothing_period)
     
     # get starting day of trading
     if smoothing_period != False and smoothing_period != 0:        
